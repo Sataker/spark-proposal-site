@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automação Inteligente para Spark Assessoria</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --orange: #FF6B35;
+            --orange-dark: #E55A2B;
+            --black: #1A1A1A;
+            --dark: #2D2D2D;
+            --gray: #6B7280;
+            --light: #F3F4F6;
+            --white: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--black);
+            color: var(--white);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            padding: 20px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 107, 53, 0.2);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--orange);
+        }
+
+        .logo span {
+            color: var(--white);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 80px;
+            background: linear-gradient(135deg, var(--black) 0%, var(--dark) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(255, 107, 53, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255, 107, 53, 0.15);
+            color: var(--orange);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 24px;
+            border: 1px solid rgba(255, 107, 53, 0.3);
+        }
+
+        .hero h1 {
+            font-size: clamp(36px, 6vw, 64px);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 .highlight {
+            color: var(--orange);
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: var(--gray);
+            max-width: 600px;
+            margin-bottom: 40px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--orange);
+            color: var(--white);
+            padding: 16px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background: var(--orange-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 80px 0;
+            background: var(--dark);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--orange);
+            margin-bottom: 8px;
+        }
+
+        .stat-item p {
+            color: var(--gray);
+            font-size: 16px;
+        }
+
+        /* Problem Section */
+        .problem {
+            padding: 100px 0;
+            background: var(--black);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: 40px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .section-header p {
+            color: var(--gray);
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .problem-card {
+            background: var(--dark);
+            padding: 32px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .problem-card .icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 107, 53, 0.15);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .problem-card .icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--orange);
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .problem-card h3 {
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .problem-card p {
+            color: var(--gray);
+            font-size: 15px;
+        }
+
+        /* Solutions Section */
+        .solutions {
+            padding: 100px 0;
+            background: linear-gradient(180deg, var(--dark) 0%, var(--black) 100%);
+        }
+
+        .solution-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            margin-bottom: 100px;
+        }
+
+        .solution-item:nth-child(even) {
+            direction: rtl;
+        }
+
+        .solution-item:nth-child(even) > * {
+            direction: ltr;
+        }
+
+        .solution-content h3 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .solution-content h3 .number {
+            color: var(--orange);
+        }
+
+        .solution-content p {
+            color: var(--gray);
+            font-size: 16px;
+            margin-bottom: 24px;
+        }
+
+        .solution-features {
+            list-style: none;
+        }
+
+        .solution-features li {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .solution-features li::before {
+            content: '✓';
+            color: var(--orange);
+            font-weight: 700;
+        }
+
+        .solution-visual {
+            background: var(--dark);
+            border-radius: 16px;
+            padding: 40px;
+            border: 1px solid rgba(255, 107, 53, 0.2);
+        }
+
+        .solution-visual pre {
+            background: var(--black);
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            overflow-x: auto;
+            color: var(--light);
+        }
+
+        /* Pricing Section */
+        .pricing {
+            padding: 100px 0;
+            background: var(--black);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .pricing-card {
+            background: var(--dark);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .pricing-card.featured {
+            border: 2px solid var(--orange);
+            transform: scale(1.02);
+        }
+
+        .pricing-card.featured::before {
+            content: 'RECOMENDADO';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--orange);
+            color: var(--white);
+            padding: 4px 16px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .pricing-card h3 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .pricing-card .price {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--orange);
+            margin: 20px 0;
+        }
+
+        .pricing-card .price span {
+            font-size: 16px;
+            color: var(--gray);
+            font-weight: 400;
+        }
+
+        .pricing-card .setup {
+            color: var(--gray);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 32px;
+        }
+
+        .pricing-features li {
+            padding: 10px 0;
+            color: var(--light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+        }
+
+        .pricing-features li::before {
+            content: '✓';
+            color: var(--orange);
+        }
+
+        .pricing-button {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: transparent;
+            border: 2px solid var(--orange);
+            color: var(--orange);
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .pricing-button:hover,
+        .pricing-card.featured .pricing-button {
+            background: var(--orange);
+            color: var(--white);
+        }
+
+        /* ROI Section */
+        .roi {
+            padding: 100px 0;
+            background: var(--dark);
+        }
+
+        .roi-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .roi-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .roi-table th,
+        .roi-table td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .roi-table th {
+            color: var(--gray);
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .roi-table td {
+            font-size: 16px;
+        }
+
+        .roi-table .highlight-cell {
+            color: var(--orange);
+            font-weight: 600;
+        }
+
+        .roi-result {
+            background: rgba(255, 107, 53, 0.1);
+            padding: 40px;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid rgba(255, 107, 53, 0.3);
+        }
+
+        .roi-result h3 {
+            font-size: 64px;
+            color: var(--orange);
+            font-weight: 800;
+        }
+
+        .roi-result p {
+            color: var(--gray);
+            margin-top: 8px;
+        }
+
+        /* CTA Section */
+        .final-cta {
+            padding: 100px 0;
+            background: linear-gradient(135deg, var(--orange-dark) 0%, var(--orange) 100%);
+            text-align: center;
+        }
+
+        .final-cta h2 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .final-cta p {
+            font-size: 20px;
+            opacity: 0.9;
+            margin-bottom: 40px;
+        }
+
+        .final-cta .cta-button {
+            background: var(--white);
+            color: var(--orange);
+        }
+
+        .final-cta .cta-button:hover {
+            background: var(--light);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            background: var(--black);
+            text-align: center;
+            color: var(--gray);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .solution-item {
+                grid-template-columns: 1fr;
+            }
+
+            .solution-item:nth-child(even) {
+                direction: ltr;
+            }
+
+            .roi-content {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-card.featured {
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">Enzo<span>Vaccaro</span>.ai</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">Proposta Exclusiva para Spark Assessoria</div>
+                <h1>
+                    Transforme sua agência em uma<br>
+                    <span class="highlight">máquina de resultados</span><br>
+                    com Inteligência Artificial
+                </h1>
+                <p>
+                    Agentes de IA que trabalham 24/7 para automatizar tarefas repetitivas, 
+                    gerar insights em tempo real e multiplicar a capacidade da sua equipe.
+                </p>
+                <a href="#solucoes" class="cta-button">Ver Soluções →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h3>103h</h3>
+                    <p>Economia mensal de trabalho operacional</p>
+                </div>
+                <div class="stat-item">
+                    <h3>R$8k+</h3>
+                    <p>Economia mensal em trabalho operacional</p>
+                </div>
+                <div class="stat-item">
+                    <h3>24/7</h3>
+                    <p>Monitoramento contínuo das campanhas</p>
+                </div>
+                <div class="stat-item">
+                    <h3>3x</h3>
+                    <p>Mais clientes com mesma equipe</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem -->
+    <section class="problem">
+        <div class="container">
+            <div class="section-header">
+                <h2>Os desafios de toda agência</h2>
+                <p>Você conhece bem esses problemas do dia a dia</p>
+            </div>
+            <div class="problem-grid">
+                <div class="problem-card">
+                    <div class="icon">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    </div>
+                    <h3>Tempo desperdiçado</h3>
+                    <p>Relatórios manuais, monitoramento de campanhas e tarefas repetitivas consomem horas preciosas da equipe.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="icon">
+                        <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                    </div>
+                    <h3>Campanhas no escuro</h3>
+                    <p>CPA estoura de madrugada e ninguém vê. Oportunidades de otimização passam despercebidas.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="icon">
+                        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    </div>
+                    <h3>Briefings confusos</h3>
+                    <p>Cliente manda áudio, atendimento interpreta de um jeito, designer entende outro. Retrabalho garantido.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="icon">
+                        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    </div>
+                    <h3>Atendimento sobrecarregado</h3>
+                    <p>"Cadê meu relatório?" "Como tá a campanha?" Perguntas repetitivas tomam tempo de trabalho estratégico.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="icon">
+                        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    </div>
+                    <h3>Projetos atrasam</h3>
+                    <p>Tarefas caem no limbo, prazos são perdidos, gestores passam o dia cobrando atualizações.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="icon">
+                        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    </div>
+                    <h3>Concorrência invisível</h3>
+                    <p>Não sabe o que os concorrentes dos seus clientes estão fazendo. Descobre tendências tarde demais.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solutions -->
+    <section class="solutions" id="solucoes">
+        <div class="container">
+            <div class="section-header">
+                <h2>A solução: Agentes de IA especializados</h2>
+                <p>Cada departamento com seu assistente inteligente trabalhando 24/7</p>
+            </div>
+
+            <!-- Solution 1: ADS -->
+            <div class="solution-item">
+                <div class="solution-content">
+                    <h3><span class="number">01.</span> Gestão de Tráfego Pago</h3>
+                    <p>Monitoramento 24/7 das campanhas com alertas inteligentes e relatórios automáticos para clientes.</p>
+                    <ul class="solution-features">
+                        <li>Alerta quando CPA sobe mais de 30%</li>
+                        <li>Pausa automática de conjuntos problemáticos</li>
+                        <li>Relatório diário no WhatsApp do cliente</li>
+                        <li>Sugestões de otimização baseadas em dados</li>
+                        <li>Benchmark vs média do setor</li>
+                    </ul>
+                </div>
+                <div class="solution-visual">
+                    <pre>
+ALERTA - Meta Ads
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Cliente: Spark Assessoria
+Campanha: Leads Março
+
+⚠️ CPA aumentou 45% nas últimas 6h
+   Atual: R$52 | Meta: R$35
+
+Causa provável: Frequência alta (2.8)
+Criativo precisa de refresh.
+
+Ação sugerida:
+→ Pausar conjunto "Lookalike"
+→ Testar novo criativo
+
+[Pausar Agora] [Ignorar]
+                    </pre>
+                </div>
+            </div>
+
+            <!-- Solution 2: Copywriting -->
+            <div class="solution-item">
+                <div class="solution-content">
+                    <h3><span class="number">02.</span> Copy de Qualidade em Volume</h3>
+                    <p>Copys bem escritas, persuasivas e com técnica — mesmo produzindo em escala. Qualidade profissional sem sacrificar velocidade.</p>
+                    <ul class="solution-features">
+                        <li>Técnicas de copywriting aplicadas (PAS, AIDA, storytelling)</li>
+                        <li>Tom de voz personalizado para cada cliente</li>
+                        <li>Variações mantêm a qualidade da original</li>
+                        <li>Headlines e hooks testados e comprovados</li>
+                        <li>Revisão de gatilhos mentais e persuasão</li>
+                    </ul>
+                </div>
+                <div class="solution-visual">
+                    <pre>
+COPY DE QUALIDADE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Briefing: Vender curso de vendas
+
+Copy gerada (técnica PAS):
+
+PROBLEMA:
+"Você faz 50 ligações por dia 
+e fecha 2 vendas?"
+
+AGITAÇÃO:
+"Enquanto isso, vendedores 
+medíocres batem meta fácil 
+usando uma técnica simples..."
+
+SOLUÇÃO:
+"Descubra o método que 
+transformou iniciantes em 
+top performers em 30 dias."
+
+✓ Gatilho de curiosidade
+✓ Prova social implícita
+✓ CTA com prazo
+✓ Tom adequado ao público
+                    </pre>
+                </div>
+            </div>
+
+            <!-- Solution 3: Content -->
+            <div class="solution-item">
+                <div class="solution-content">
+                    <h3><span class="number">03.</span> Criação de Conteúdo</h3>
+                    <p>Calendário mensal completo em 1 hora. Roteiros de vídeo, legendas otimizadas e reaproveitamento inteligente.</p>
+                    <ul class="solution-features">
+                        <li>Grade de 30 dias com temas e formatos</li>
+                        <li>Roteiros completos para Reels</li>
+                        <li>Pesquisa de tendências automatizada</li>
+                        <li>1 vídeo vira 15 peças de conteúdo</li>
+                        <li>Hashtags otimizadas por nicho</li>
+                    </ul>
+                </div>
+                <div class="solution-visual">
+                    <pre>
+CALENDÁRIO MARÇO - Cliente X
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Seg 03 | Carrossel | Educação
+"5 erros que matam suas vendas"
+⏰ 10:00 | Pilar: Autoridade
+
+Ter 04 | Reel | Bastidores
+"Um dia na agência"
+⏰ 19:00 | Pilar: Conexão
+
+Qua 05 | Story | Prova Social
+"Resultado cliente Y: +340%"
+⏰ 12:00 | Pilar: Prova
+
+[...27 dias restantes]
+
+✓ Legendas prontas
+✓ Hashtags incluídas
+✓ Roteiros de vídeo
+                    </pre>
+                </div>
+            </div>
+
+            <!-- Solution 4: Designers -->
+            <div class="solution-item">
+                <div class="solution-content">
+                    <h3><span class="number">04.</span> Assistente para Designers</h3>
+                    <p>Briefings estruturados, banco de referências e feedback traduzido. Zero retrabalho.</p>
+                    <ul class="solution-features">
+                        <li>Transforma pedido vago em briefing completo</li>
+                        <li>Banco de referências por nicho</li>
+                        <li>Checklist de entrega automático</li>
+                        <li>Feedback do cliente estruturado</li>
+                        <li>Padrões de marca sempre aplicados</li>
+                    </ul>
+                </div>
+                <div class="solution-visual">
+                    <pre>
+BRIEFING ESTRUTURADO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Cliente disse: 
+"Quero um post bonito da promoção"
+
+Briefing gerado:
+
+Objetivo: Post promocional
+Formato: 1080x1080 + Story
+Texto: "30% OFF até domingo"
+Cores: #FF6B35, #1A1A1A
+Tom: Urgente mas elegante
+Entrega: 24h
+Aprovador: Maria (cliente)
+
+Referências anexadas: 5 posts
+de alta performance do setor
+                    </pre>
+                </div>
+            </div>
+
+            <!-- Solution 5: Traffic Managers -->
+            <div class="solution-item">
+                <div class="solution-content">
+                    <h3><span class="number">05.</span> Assistente para Gestores</h3>
+                    <p>Análise automática de performance, insights acionáveis e tradução de dados para o cliente.</p>
+                    <ul class="solution-features">
+                        <li>Diagnóstico diário de cada campanha</li>
+                        <li>Comparativo com benchmarks do setor</li>
+                        <li>Sugestões de otimização priorizadas</li>
+                        <li>Explicação simplificada para clientes</li>
+                        <li>Gestor junior performa como senior</li>
+                    </ul>
+                </div>
+                <div class="solution-visual">
+                    <pre>
+ANÁLISE DE PERFORMANCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Campanha: Leads Março
+Status: ACIMA DA MÉDIA ✓
+
+Suas métricas vs Setor:
+CPL: R$32 vs R$48 (33% melhor!)
+CTR: 1.8% vs 1.2% (50% melhor)
+
+INSIGHT:
+O vídeo de depoimento tem CTR 
+2x maior que os outros.
+→ Criar mais conteúdo de 
+  prova social.
+
+OPORTUNIDADE:
+Público "Empresários" performa
+40% melhor. Aumentar budget.
+                    </pre>
+                </div>
+            </div>
+
+            <!-- Solution 6: Sales Team -->
+            <div class="solution-item">
+                <div class="solution-content">
+                    <h3><span class="number">06.</span> Análise da Equipe Comercial</h3>
+                    <p>Analisa todas as conversas de vendas, identifica padrões e sugere melhorias. Coaching automatizado.</p>
+                    <ul class="solution-features">
+                        <li>Análise de cada conversa perdida</li>
+                        <li>Ranking de performance do time</li>
+                        <li>Identificação de objeções comuns</li>
+                        <li>Scripts que funcionam destacados</li>
+                        <li>Coaching personalizado automático</li>
+                    </ul>
+                </div>
+                <div class="solution-visual">
+                    <pre>
+ANÁLISE DE CONVERSA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Lead: Maria Silva
+Status: PERDIDA
+
+✓ Resposta em 8 min (ótimo!)
+✓ Usou nome do cliente
+✓ Fez qualificação
+
+✗ Não tratou objeção de preço
+  Lead: "tá caro"
+  Vendedor: mandou desconto
+  
+  → Deveria explorar valor 
+    antes de dar desconto
+
+SUGESTÃO:
+"Caro comparado a quê? Me conta
+mais sobre sua situação atual
+pra eu entender se faz sentido."
+                    </pre>
+                </div>
+            </div>
+
+            <!-- Solution 7: Project Management -->
+            <div class="solution-item">
+                <div class="solution-content">
+                    <h3><span class="number">07.</span> Gestão de Projetos (Monday)</h3>
+                    <p>Distribuição automática de tarefas, cobrança inteligente e daily para cada funcionário.</p>
+                    <ul class="solution-features">
+                        <li>Atribui tarefas para pessoa certa</li>
+                        <li>Notifica responsável no WhatsApp</li>
+                        <li>Lembra antes do prazo vencer</li>
+                        <li>Escala para gestor se atrasar</li>
+                        <li>Relatório semanal do time completo</li>
+                    </ul>
+                </div>
+                <div class="solution-visual">
+                    <pre>
+NOTIFICAÇÃO AUTOMÁTICA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Oi Maria! Nova tarefa:
+
+📋 Criar artes Black Friday
+   Cliente: Spark Assessoria
+   
+⏰ Prazo: 20/11 (5 dias)
+📌 Prioridade: Alta
+📎 Briefing em anexo
+
+Quando começar, atualiza o 
+status no Monday!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DAILY - Seu dia hoje:
+
+🔴 Arte promoção (vence 14h)
+🔴 Revisão copy (vence 18h)
+🟡 Calendário dez (quinta)
+
+Total: 5 tarefas | Carga: 78%
+                    </pre>
+                </div>
+            </div>
+
+            <!-- Solution 8: Competitive Intelligence -->
+            <div class="solution-item">
+                <div class="solution-content">
+                    <h3><span class="number">08.</span> Inteligência Competitiva</h3>
+                    <p>Monitora concorrentes, identifica tendências e encontra oportunidades antes do mercado.</p>
+                    <ul class="solution-features">
+                        <li>Monitoramento de anúncios (Ad Library)</li>
+                        <li>Benchmark de redes sociais</li>
+                        <li>Alertas de tendências emergentes</li>
+                        <li>Relatório semanal de concorrentes</li>
+                        <li>Oportunidades destacadas</li>
+                    </ul>
+                </div>
+                <div class="solution-visual">
+                    <pre>
+RELATÓRIO COMPETITIVO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CONCORRENTE A:
+Anúncios ativos: 23 (+5 novos)
+Formatos: 60% vídeo, 30% carrossel
+Tema: Apostando em depoimentos
+
+→ Considerar testar formato
+
+CONCORRENTE B:
+Anúncios: 8 (-12 vs semana passada)
+Parecem ter pausado campanhas
+
+⚡ OPORTUNIDADE:
+Momento de aumentar investimento
+enquanto concorrente está fora!
+
+TENDÊNCIA DETECTADA:
+"IA para marketing" +340% buscas
+Criar conteúdo posicionando
+cliente como referência.
+                    </pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROI -->
+    <section class="roi">
+        <div class="container">
+            <div class="section-header">
+                <h2>O retorno é garantido</h2>
+                <p>Veja quanto a Spark pode economizar por mês</p>
+            </div>
+            <div class="roi-content">
+                <table class="roi-table">
+                    <thead>
+                        <tr>
+                            <th>Atividade</th>
+                            <th>Tempo atual</th>
+                            <th>Com automação</th>
+                            <th>Economia</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Relatórios</td>
+                            <td>40h</td>
+                            <td>2h</td>
+                            <td class="highlight-cell">38h</td>
+                        </tr>
+                        <tr>
+                            <td>Monitoramento ads</td>
+                            <td>30h</td>
+                            <td>0h</td>
+                            <td class="highlight-cell">30h</td>
+                        </tr>
+                        <tr>
+                            <td>Criar copys</td>
+                            <td>20h</td>
+                            <td>5h</td>
+                            <td class="highlight-cell">15h</td>
+                        </tr>
+                        <tr>
+                            <td>Gestão projetos</td>
+                            <td>15h</td>
+                            <td>3h</td>
+                            <td class="highlight-cell">12h</td>
+                        </tr>
+                        <tr>
+                            <td>Briefings</td>
+                            <td>10h</td>
+                            <td>2h</td>
+                            <td class="highlight-cell">8h</td>
+                        </tr>
+                        <tr>
+                            <td><strong>TOTAL</strong></td>
+                            <td><strong>115h</strong></td>
+                            <td><strong>12h</strong></td>
+                            <td class="highlight-cell"><strong>103h</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="roi-result">
+                    <h3>103h</h3>
+                    <p>Economia mensal</p>
+                    <br>
+                    <p style="font-size: 14px; margin-top: 20px;">
+                        Horas economizadas por mês<br>
+                        em tarefas operacionais<br>
+                        <span style="color: var(--orange);">= R$8.240 em valor de trabalho</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="final-cta" id="contato">
+        <div class="container">
+            <h2>Vamos transformar a Spark?</h2>
+            <p>Agende uma conversa de 30 minutos para ver como a automação funciona na prática.</p>
+            <a href="https://wa.me/5517991563451" class="cta-button">Falar no WhatsApp →</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>Enzo Vaccaro © 2026 — Automação Inteligente com IA</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
