@@ -1,0 +1,1923 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automação Inteligente para Spark Assessoria</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --orange: #FF6B35;
+            --orange-light: #FF8A5B;
+            --orange-dark: #E55A2B;
+            --black: #0A0A0B;
+            --dark: #1A1A1A;
+            --dark-2: #2D2D2D;
+            --gray: #6B7280;
+            --light: #F3F4F6;
+            --white: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--black);
+            color: var(--white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ========== ANIMATIONS ========== */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 107, 53, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(255, 107, 53, 0.6); }
+        }
+
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes fade-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fade-in-left {
+            from {
+                opacity: 0;
+                transform: translateX(-40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scale-in {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        @keyframes spark-float {
+            0%, 100% { 
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            50% { 
+                transform: translateY(-100px) rotate(180deg);
+                opacity: 0.5;
+            }
+        }
+
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .stagger-1 { transition-delay: 0.1s; }
+        .stagger-2 { transition-delay: 0.2s; }
+        .stagger-3 { transition-delay: 0.3s; }
+        .stagger-4 { transition-delay: 0.4s; }
+        .stagger-5 { transition-delay: 0.5s; }
+        .stagger-6 { transition-delay: 0.6s; }
+
+        /* ========== HEADER ========== */
+        header {
+            padding: 20px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            background: rgba(10, 10, 11, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 107, 53, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        header.scrolled {
+            padding: 12px 0;
+            background: rgba(10, 10, 11, 0.95);
+            border-bottom: 1px solid rgba(255, 107, 53, 0.3);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--orange);
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            text-shadow: 0 0 20px rgba(255, 107, 53, 0.5);
+        }
+
+        .logo span {
+            color: var(--white);
+        }
+
+        /* ========== HERO SECTION ========== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 80px;
+            background: var(--black);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated gradient background */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(255, 107, 53, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(255, 138, 91, 0.05) 0%, transparent 70%);
+            animation: gradient-shift 15s ease infinite;
+            background-size: 200% 200%;
+        }
+
+        /* Floating particles */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--orange);
+            border-radius: 50%;
+            animation: spark-float 8s infinite;
+            opacity: 0.6;
+        }
+
+        .particle:nth-child(1) { left: 10%; animation-delay: 0s; animation-duration: 12s; }
+        .particle:nth-child(2) { left: 20%; animation-delay: 2s; animation-duration: 10s; }
+        .particle:nth-child(3) { left: 30%; animation-delay: 4s; animation-duration: 14s; }
+        .particle:nth-child(4) { left: 40%; animation-delay: 1s; animation-duration: 11s; }
+        .particle:nth-child(5) { left: 50%; animation-delay: 3s; animation-duration: 13s; }
+        .particle:nth-child(6) { left: 60%; animation-delay: 5s; animation-duration: 9s; }
+        .particle:nth-child(7) { left: 70%; animation-delay: 2s; animation-duration: 15s; }
+        .particle:nth-child(8) { left: 80%; animation-delay: 4s; animation-duration: 12s; }
+        .particle:nth-child(9) { left: 90%; animation-delay: 1s; animation-duration: 10s; }
+        .particle:nth-child(10) { left: 15%; animation-delay: 3s; animation-duration: 11s; }
+
+        /* Grid overlay */
+        .hero-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(255, 107, 53, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 107, 53, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255, 107, 53, 0.1);
+            color: var(--orange);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 24px;
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            animation: fade-in-up 0.8s ease forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        .badge-pulse {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            background: #00ff88;
+            border-radius: 50%;
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: translateY(-50%) scale(1); }
+            50% { opacity: 0.5; transform: translateY(-50%) scale(1.5); }
+        }
+
+        .hero-badge {
+            padding-left: 28px;
+        }
+
+        .hero h1 {
+            font-size: clamp(48px, 7vw, 86px);
+            font-weight: 800;
+            line-height: 1.05;
+            margin-bottom: 28px;
+        }
+
+        .hero-line {
+            display: block;
+            animation: fade-in-up 0.8s ease forwards;
+            opacity: 0;
+        }
+
+        .hero-line:nth-child(1) { animation-delay: 0.2s; }
+        .hero-line:nth-child(2) { animation-delay: 0.4s; }
+        .hero-line:nth-child(3) { animation-delay: 0.6s; }
+
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, var(--orange) 0%, var(--orange-light) 50%, var(--orange) 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient-shift 3s ease infinite, fade-in-up 0.8s ease forwards;
+            animation-delay: 0.4s;
+            position: relative;
+        }
+
+        .hero-subtitle {
+            font-size: 22px;
+            color: var(--gray);
+            max-width: 650px;
+            margin-bottom: 36px;
+            animation: fade-in-up 0.8s ease forwards;
+            animation-delay: 0.8s;
+            opacity: 0;
+            line-height: 1.6;
+        }
+
+        /* Hero Features */
+        .hero-features {
+            display: flex;
+            gap: 32px;
+            margin-bottom: 40px;
+            animation: fade-in-up 0.8s ease forwards;
+            animation-delay: 1s;
+            opacity: 0;
+        }
+
+        .hero-feature {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+            color: var(--light);
+        }
+
+        .feature-icon {
+            font-size: 20px;
+        }
+
+        /* Hero CTA Group */
+        .hero-cta-group {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            animation: fade-in-up 0.8s ease forwards;
+            animation-delay: 1.2s;
+            opacity: 0;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 32px;
+        }
+
+        .stat-mini {
+            text-align: left;
+        }
+
+        .stat-mini strong {
+            display: block;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--orange);
+        }
+
+        .stat-mini span {
+            font-size: 13px;
+            color: var(--gray);
+        }
+
+        /* Floating Elements */
+        .floating-elements {
+            position: absolute;
+            right: 5%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 400px;
+            height: 500px;
+            z-index: 2;
+        }
+
+        .floating-card {
+            position: absolute;
+            background: rgba(45, 45, 45, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .card-1 {
+            top: 0;
+            right: 0;
+            animation-delay: 0s;
+        }
+
+        .card-2 {
+            top: 40%;
+            right: 30%;
+            animation-delay: 1s;
+        }
+
+        .card-3 {
+            bottom: 10%;
+            right: 10%;
+            animation-delay: 2s;
+        }
+
+        .mock-browser {
+            width: 200px;
+        }
+
+        .mock-dots {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .mock-dots span {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--gray);
+        }
+
+        .mock-dots span:first-child { background: #ff5f57; }
+        .mock-dots span:nth-child(2) { background: #ffbd2e; }
+        .mock-dots span:nth-child(3) { background: #28ca42; }
+
+        .mock-content {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .mock-line {
+            height: 8px;
+            background: rgba(255, 107, 53, 0.3);
+            border-radius: 4px;
+            animation: shimmer 2s infinite;
+        }
+
+        .mock-line.w-60 { width: 60%; }
+        .mock-line.w-80 { width: 80%; }
+        .mock-line.w-40 { width: 40%; }
+
+        .code-snippet {
+            font-family: 'SF Mono', monospace;
+            font-size: 14px;
+        }
+
+        .code-tag {
+            color: var(--orange);
+        }
+
+        .code-text {
+            color: var(--light);
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+
+        .check-badge {
+            color: #00ff88;
+            font-weight: 600;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        @media (max-width: 1200px) {
+            .floating-elements {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-features {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .hero-cta-group {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 24px;
+            }
+
+            .hero-stats {
+                gap: 24px;
+            }
+        }
+
+        /* Premium CTA Button */
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--orange) 0%, var(--orange-dark) 100%);
+            color: var(--white);
+            padding: 18px 36px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 18px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fade-in-up 0.8s ease forwards;
+            animation-delay: 0.6s;
+            opacity: 0;
+            box-shadow: 0 4px 20px rgba(255, 107, 53, 0.3);
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 40px rgba(255, 107, 53, 0.5);
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        /* ========== STATS SECTION ========== */
+        .stats {
+            padding: 100px 0;
+            background: var(--dark);
+            position: relative;
+        }
+
+        .stats::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--orange), transparent);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 30px;
+            border-radius: 20px;
+            background: rgba(255, 107, 53, 0.05);
+            border: 1px solid rgba(255, 107, 53, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stat-item:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 107, 53, 0.1);
+            border-color: rgba(255, 107, 53, 0.3);
+            box-shadow: 0 20px 40px rgba(255, 107, 53, 0.15);
+        }
+
+        .stat-item h3 {
+            font-size: 52px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--orange) 0%, var(--orange-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .stat-item p {
+            color: var(--gray);
+            font-size: 15px;
+        }
+
+        /* ========== PROBLEM SECTION ========== */
+        .problem {
+            padding: 120px 0;
+            background: var(--black);
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-header h2 {
+            font-size: 44px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--white) 0%, var(--gray) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-header p {
+            color: var(--gray);
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .problem-card {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--dark-2) 100%);
+            padding: 36px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: default;
+        }
+
+        .problem-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--orange), var(--orange-light));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .problem-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(255, 107, 53, 0.2);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .problem-card:hover::before {
+            opacity: 1;
+        }
+
+        .problem-card .icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.2) 0%, rgba(255, 107, 53, 0.1) 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            transition: all 0.4s ease;
+        }
+
+        .problem-card:hover .icon {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);
+        }
+
+        .problem-card .icon svg {
+            width: 28px;
+            height: 28px;
+            stroke: var(--orange);
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .problem-card h3 {
+            font-size: 22px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .problem-card p {
+            color: var(--gray);
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        /* ========== SOLUTIONS SECTION ========== */
+        .solutions {
+            padding: 120px 0;
+            background: linear-gradient(180deg, var(--dark) 0%, var(--black) 100%);
+        }
+
+        /* Code Window */
+        .code-window {
+            background: #1e1e1e;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 107, 53, 0.2);
+        }
+
+        .code-header {
+            background: #2d2d2d;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .code-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .code-dots span {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .code-dots span:nth-child(1) { background: #ff5f57; }
+        .code-dots span:nth-child(2) { background: #ffbd2e; }
+        .code-dots span:nth-child(3) { background: #28ca42; }
+
+        .code-title {
+            color: var(--gray);
+            font-size: 13px;
+            font-family: 'SF Mono', monospace;
+        }
+
+        .code-body {
+            padding: 24px;
+        }
+
+        .code-body pre {
+            margin: 0;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .code-keyword { color: #c586c0; }
+        .code-var { color: #9cdcfe; }
+        .code-func { color: #dcdcaa; }
+        .code-prop { color: #9cdcfe; }
+        .code-string { color: #ce9178; }
+        .code-bool { color: #569cd6; }
+        .code-comment { color: #6a9955; }
+
+        .solution-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            margin-bottom: 120px;
+        }
+
+        .solution-item:nth-child(even) {
+            direction: rtl;
+        }
+
+        .solution-item:nth-child(even) > * {
+            direction: ltr;
+        }
+
+        .solution-content h3 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .solution-content h3 .number {
+            background: linear-gradient(135deg, var(--orange) 0%, var(--orange-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .solution-content > p {
+            color: var(--gray);
+            font-size: 17px;
+            margin-bottom: 28px;
+            line-height: 1.8;
+        }
+
+        .solution-features {
+            list-style: none;
+        }
+
+        .solution-features li {
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .solution-features li:hover {
+            padding-left: 10px;
+            color: var(--orange);
+        }
+
+        .solution-features li::before {
+            content: '✓';
+            color: var(--orange);
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .solution-visual {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--dark-2) 100%);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255, 107, 53, 0.15);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .solution-visual::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 107, 53, 0.1) 0%, transparent 70%);
+        }
+
+        .solution-visual:hover {
+            border-color: rgba(255, 107, 53, 0.3);
+            transform: scale(1.02);
+            box-shadow: 0 30px 60px rgba(255, 107, 53, 0.1);
+        }
+
+        .solution-visual pre {
+            background: var(--black);
+            padding: 24px;
+            border-radius: 12px;
+            font-size: 13px;
+            overflow-x: auto;
+            color: var(--light);
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        /* ========== ROI SECTION ========== */
+        .roi {
+            padding: 120px 0;
+            background: var(--dark);
+            position: relative;
+        }
+
+        .roi::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--orange), transparent);
+        }
+
+        .roi-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .roi-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .roi-table th,
+        .roi-table td {
+            padding: 18px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .roi-table th {
+            color: var(--gray);
+            font-weight: 500;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .roi-table td {
+            font-size: 16px;
+        }
+
+        .roi-table tr {
+            transition: all 0.3s ease;
+        }
+
+        .roi-table tr:hover {
+            background: rgba(255, 107, 53, 0.05);
+        }
+
+        .roi-table .highlight-cell {
+            color: var(--orange);
+            font-weight: 600;
+        }
+
+        .roi-result {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.15) 0%, rgba(255, 107, 53, 0.05) 100%);
+            padding: 50px;
+            border-radius: 24px;
+            text-align: center;
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .roi-result::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 107, 53, 0.1) 0%, transparent 50%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .roi-result h3 {
+            font-size: 72px;
+            background: linear-gradient(135deg, var(--orange) 0%, var(--orange-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            position: relative;
+        }
+
+        .roi-result p {
+            color: var(--gray);
+            margin-top: 8px;
+            position: relative;
+        }
+
+        /* ========== FINAL CTA ========== */
+        .final-cta {
+            padding: 120px 0;
+            background: linear-gradient(135deg, var(--orange-dark) 0%, var(--orange) 50%, var(--orange-light) 100%);
+            background-size: 200% 200%;
+            animation: gradient-shift 10s ease infinite;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .final-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+        }
+
+        .final-cta h2 {
+            font-size: 52px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .final-cta p {
+            font-size: 20px;
+            opacity: 0.9;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .final-cta .cta-button {
+            background: var(--white);
+            color: var(--orange);
+            animation: none;
+            opacity: 1;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .final-cta .cta-button:hover {
+            background: var(--light);
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ========== FOOTER ========== */
+        footer {
+            padding: 50px 0;
+            background: var(--black);
+            text-align: center;
+            color: var(--gray);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 968px) {
+            .solution-item {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .solution-item:nth-child(even) {
+                direction: ltr;
+            }
+
+            .roi-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .section-header h2 {
+                font-size: 32px;
+            }
+
+            .stat-item h3 {
+                font-size: 40px;
+            }
+
+            .final-cta h2 {
+                font-size: 36px;
+            }
+        }
+
+        /* ========== SPARKS CANVAS ========== */
+        #sparksCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ========== CUSTOM SCROLLBAR ========== */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--black);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--orange);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--orange-light);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">Enzo<span>Vaccaro</span>.ai</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sparks Canvas Background (Full Page) -->
+    <canvas id="sparksCanvas"></canvas>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+        <div class="hero-grid"></div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-pulse"></span>
+                    Tecnologia de ponta em IA
+                </div>
+                <h1>
+                    <span class="hero-line">Automação inteligente</span>
+                    <span class="hero-line">para <span class="highlight">agências</span></span>
+                    <span class="hero-line">que querem escalar.</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Agentes de IA trabalhando 24/7 para automatizar tarefas,<br>
+                    criar sites, gerar conteúdo e multiplicar seus resultados.
+                </p>
+                <div class="hero-features">
+                    <div class="hero-feature">
+                        <span class="feature-icon">⚡</span>
+                        <span>103h economizadas/mês</span>
+                    </div>
+                    <div class="hero-feature">
+                        <span class="feature-icon">🤖</span>
+                        <span>IA trabalhando 24/7</span>
+                    </div>
+                    <div class="hero-feature">
+                        <span class="feature-icon">📈</span>
+                        <span>3x mais capacidade</span>
+                    </div>
+                </div>
+                <div class="hero-cta-group">
+                    <a href="#solucoes" class="cta-button primary">Ver Soluções →</a>
+                    <div class="hero-stats">
+                        <div class="stat-mini">
+                            <strong>R$8k+</strong>
+                            <span>economia/mês</span>
+                        </div>
+                        <div class="stat-mini">
+                            <strong>24/7</strong>
+                            <span>monitoramento</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Floating mockups -->
+        <div class="floating-elements">
+            <div class="floating-card card-1">
+                <div class="mock-browser">
+                    <div class="mock-dots">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <div class="mock-content">
+                        <div class="mock-line w-60"></div>
+                        <div class="mock-line w-80"></div>
+                        <div class="mock-line w-40"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="floating-card card-2">
+                <div class="code-snippet">
+                    <span class="code-tag">&lt;ai&gt;</span>
+                    <span class="code-text">creating...</span>
+                    <span class="code-tag">&lt;/ai&gt;</span>
+                </div>
+            </div>
+            <div class="floating-card card-3">
+                <div class="check-badge">✓ Site pronto!</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item animate-on-scroll stagger-1">
+                    <h3>103h</h3>
+                    <p>Economia mensal de trabalho operacional</p>
+                </div>
+                <div class="stat-item animate-on-scroll stagger-2">
+                    <h3>R$8k+</h3>
+                    <p>Economia mensal em trabalho operacional</p>
+                </div>
+                <div class="stat-item animate-on-scroll stagger-3">
+                    <h3>24/7</h3>
+                    <p>Monitoramento contínuo das campanhas</p>
+                </div>
+                <div class="stat-item animate-on-scroll stagger-4">
+                    <h3>3x</h3>
+                    <p>Mais clientes com mesma equipe</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem -->
+    <section class="problem">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <h2>Os desafios de toda agência</h2>
+                <p>Você conhece bem esses problemas do dia a dia</p>
+            </div>
+            <div class="problem-grid">
+                <div class="problem-card animate-on-scroll stagger-1">
+                    <div class="icon">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    </div>
+                    <h3>Tempo desperdiçado</h3>
+                    <p>Relatórios manuais, monitoramento de campanhas e tarefas repetitivas consomem horas preciosas da equipe.</p>
+                </div>
+                <div class="problem-card animate-on-scroll stagger-2">
+                    <div class="icon">
+                        <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                    </div>
+                    <h3>Campanhas no escuro</h3>
+                    <p>CPA estoura de madrugada e ninguém vê. Oportunidades de otimização passam despercebidas.</p>
+                </div>
+                <div class="problem-card animate-on-scroll stagger-3">
+                    <div class="icon">
+                        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    </div>
+                    <h3>Briefings confusos</h3>
+                    <p>Cliente manda áudio, atendimento interpreta de um jeito, designer entende outro. Retrabalho garantido.</p>
+                </div>
+                <div class="problem-card animate-on-scroll stagger-4">
+                    <div class="icon">
+                        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    </div>
+                    <h3>Atendimento sobrecarregado</h3>
+                    <p>"Cadê meu relatório?" "Como tá a campanha?" Perguntas repetitivas tomam tempo de trabalho estratégico.</p>
+                </div>
+                <div class="problem-card animate-on-scroll stagger-5">
+                    <div class="icon">
+                        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    </div>
+                    <h3>Projetos atrasam</h3>
+                    <p>Tarefas caem no limbo, prazos são perdidos, gestores passam o dia cobrando atualizações.</p>
+                </div>
+                <div class="problem-card animate-on-scroll stagger-6">
+                    <div class="icon">
+                        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    </div>
+                    <h3>Concorrência invisível</h3>
+                    <p>Não sabe o que os concorrentes dos seus clientes estão fazendo. Descobre tendências tarde demais.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solutions -->
+    <section class="solutions" id="solucoes">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <h2>A solução: Agentes de IA especializados</h2>
+                <p>Cada departamento com seu assistente inteligente trabalhando 24/7</p>
+            </div>
+
+            <!-- Solution 0: Website Creation -->
+            <div class="solution-item animate-on-scroll">
+                <div class="solution-content">
+                    <h3><span class="number">01.</span> Criação de Sites com IA</h3>
+                    <p>Sites profissionais criados por inteligência artificial. Não é template - é código real, design único e funcionalidade completa.</p>
+                    <ul class="solution-features">
+                        <li>Sites completos em minutos</li>
+                        <li>Design único, não é template</li>
+                        <li>Código limpo (HTML, CSS, JS)</li>
+                        <li>Responsivo e otimizado para SEO</li>
+                        <li>Você é dono do código</li>
+                        <li>Mais barato que o Lovable</li>
+                    </ul>
+                </div>
+                <div class="solution-visual">
+                    <div class="code-window">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <span></span><span></span><span></span>
+                            </div>
+                            <span class="code-title">ai-website-generator.js</span>
+                        </div>
+                        <div class="code-body">
+                            <pre><code><span class="code-keyword">const</span> <span class="code-var">site</span> = <span class="code-keyword">await</span> AI.<span class="code-func">create</span>({
+  <span class="code-prop">tipo</span>: <span class="code-string">"landing-page"</span>,
+  <span class="code-prop">estilo</span>: <span class="code-string">"moderno"</span>,
+  <span class="code-prop">cores</span>: [<span class="code-string">"#FF6B35"</span>, <span class="code-string">"#1A1A1A"</span>],
+  <span class="code-prop">responsivo</span>: <span class="code-bool">true</span>,
+  <span class="code-prop">seo</span>: <span class="code-bool">true</span>
+});
+
+<span class="code-comment">// ✓ Site pronto</span>
+<span class="code-comment">// ✓ Código limpo</span>
+<span class="code-comment">// ✓ Design profissional</span></code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Solution 2: ADS -->
+            <div class="solution-item animate-on-scroll">
+                <div class="solution-content">
+                    <h3><span class="number">02.</span> Gestão de Tráfego Pago</h3>
+                    <p>Monitoramento 24/7 das campanhas com alertas inteligentes e relatórios automáticos para clientes.</p>
+                    <ul class="solution-features">
+                        <li>Alerta quando CPA sobe mais de 30%</li>
+                        <li>Pausa automática de conjuntos problemáticos</li>
+                        <li>Relatório diário no WhatsApp do cliente</li>
+                        <li>Sugestões de otimização baseadas em dados</li>
+                        <li>Benchmark vs média do setor</li>
+                    </ul>
+                </div>
+                <div class="solution-visual">
+                    <div class="code-window">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <span></span><span></span><span></span>
+                            </div>
+                            <span class="code-title">alerta-meta-ads.log</span>
+                        </div>
+                        <div class="code-body">
+                            <pre><code><span class="code-comment">// ALERTA - Meta Ads</span>
+<span class="code-prop">cliente</span>: <span class="code-string">"Spark Assessoria"</span>
+<span class="code-prop">campanha</span>: <span class="code-string">"Leads Março"</span>
+
+<span class="code-keyword">⚠️ CPA aumentou 45%</span>
+   <span class="code-var">atual</span>: R$52 | <span class="code-var">meta</span>: R$35
+
+<span class="code-comment">// Causa: Frequência alta (2.8)</span>
+<span class="code-comment">// Ação: Pausar + novo criativo</span>
+
+[<span class="code-func">Pausar</span>] [<span class="code-func">Ignorar</span>]</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Solution 3: Copywriting -->
+            <div class="solution-item animate-on-scroll">
+                <div class="solution-content">
+                    <h3><span class="number">03.</span> Copy de Qualidade em Volume</h3>
+                    <p>Copys bem escritas, persuasivas e com técnica — mesmo produzindo em escala. Qualidade profissional sem sacrificar velocidade.</p>
+                    <ul class="solution-features">
+                        <li>Técnicas de copywriting aplicadas (PAS, AIDA, storytelling)</li>
+                        <li>Tom de voz personalizado para cada cliente</li>
+                        <li>Variações mantêm a qualidade da original</li>
+                        <li>Headlines e hooks testados e comprovados</li>
+                        <li>Revisão de gatilhos mentais e persuasão</li>
+                    </ul>
+                </div>
+                <div class="solution-visual">
+                    <div class="code-window">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <span></span><span></span><span></span>
+                            </div>
+                            <span class="code-title">copy-generator.md</span>
+                        </div>
+                        <div class="code-body">
+                            <pre><code><span class="code-comment"># Copy PAS - Curso de Vendas</span>
+
+<span class="code-keyword">PROBLEMA:</span>
+<span class="code-string">"Você faz 50 ligações por dia 
+e fecha 2 vendas?"</span>
+
+<span class="code-keyword">AGITAÇÃO:</span>
+<span class="code-string">"Enquanto isso, vendedores 
+medíocres batem meta fácil..."</span>
+
+<span class="code-keyword">SOLUÇÃO:</span>
+<span class="code-string">"Descubra o método que 
+transformou iniciantes em 
+top performers."</span>
+
+<span class="code-comment">✓ Gatilho de curiosidade</span>
+<span class="code-comment">✓ Prova social implícita</span></code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Solution 4: Content -->
+            <div class="solution-item animate-on-scroll">
+                <div class="solution-content">
+                    <h3><span class="number">04.</span> Criação de Conteúdo</h3>
+                    <p>Calendário mensal completo em 1 hora. Roteiros de vídeo, legendas otimizadas e reaproveitamento inteligente.</p>
+                    <ul class="solution-features">
+                        <li>Grade de 30 dias com temas e formatos</li>
+                        <li>Roteiros completos para Reels</li>
+                        <li>Pesquisa de tendências automatizada</li>
+                        <li>1 vídeo vira 15 peças de conteúdo</li>
+                        <li>Hashtags otimizadas por nicho</li>
+                    </ul>
+                </div>
+                <div class="solution-visual">
+                    <div class="code-window">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <span></span><span></span><span></span>
+                            </div>
+                            <span class="code-title">calendario-marco.json</span>
+                        </div>
+                        <div class="code-body">
+                            <pre><code>{
+  <span class="code-prop">"seg_03"</span>: {
+    <span class="code-prop">"tipo"</span>: <span class="code-string">"carrossel"</span>,
+    <span class="code-prop">"tema"</span>: <span class="code-string">"5 erros de vendas"</span>,
+    <span class="code-prop">"hora"</span>: <span class="code-string">"10:00"</span>
+  },
+  <span class="code-prop">"ter_04"</span>: {
+    <span class="code-prop">"tipo"</span>: <span class="code-string">"reel"</span>,
+    <span class="code-prop">"tema"</span>: <span class="code-string">"bastidores"</span>,
+    <span class="code-prop">"hora"</span>: <span class="code-string">"19:00"</span>
+  }
+  <span class="code-comment">// +28 dias...</span>
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Solution 5: Designers -->
+            <div class="solution-item animate-on-scroll">
+                <div class="solution-content">
+                    <h3><span class="number">05.</span> Assistente para Designers</h3>
+                    <p>Briefings estruturados, banco de referências e feedback traduzido. Zero retrabalho.</p>
+                    <ul class="solution-features">
+                        <li>Transforma pedido vago em briefing completo</li>
+                        <li>Banco de referências por nicho</li>
+                        <li>Checklist de entrega automático</li>
+                        <li>Feedback do cliente estruturado</li>
+                        <li>Padrões de marca sempre aplicados</li>
+                    </ul>
+                </div>
+                <div class="solution-visual">
+                    <div class="code-window">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <span></span><span></span><span></span>
+                            </div>
+                            <span class="code-title">briefing.yaml</span>
+                        </div>
+                        <div class="code-body">
+                            <pre><code><span class="code-comment"># Input: "post bonito da promoção"</span>
+
+<span class="code-prop">objetivo</span>: <span class="code-string">Post promocional</span>
+<span class="code-prop">formato</span>: <span class="code-string">1080x1080 + Story</span>
+<span class="code-prop">texto</span>: <span class="code-string">"30% OFF até domingo"</span>
+<span class="code-prop">cores</span>:
+  - <span class="code-string">"#FF6B35"</span>
+  - <span class="code-string">"#1A1A1A"</span>
+<span class="code-prop">tom</span>: <span class="code-string">urgente mas elegante</span>
+<span class="code-prop">entrega</span>: <span class="code-string">24h</span>
+<span class="code-prop">referencias</span>: <span class="code-bool">5 anexadas</span></code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Solution 6: Project Management -->
+            <div class="solution-item animate-on-scroll">
+                <div class="solution-content">
+                    <h3><span class="number">06.</span> Gestão de Projetos Inteligente</h3>
+                    <p>Integração com Monday.com para distribuição automática de tarefas e acompanhamento em tempo real.</p>
+                    <ul class="solution-features">
+                        <li>Atribuição automática baseada em carga</li>
+                        <li>Notificações via WhatsApp/Discord</li>
+                        <li>Lembretes antes do prazo vencer</li>
+                        <li>Escalação automática de atrasos</li>
+                        <li>Relatórios de produtividade do time</li>
+                    </ul>
+                </div>
+                <div class="solution-visual">
+                    <div class="code-window">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <span></span><span></span><span></span>
+                            </div>
+                            <span class="code-title">daily-tasks.sh</span>
+                        </div>
+                        <div class="code-body">
+                            <pre><code><span class="code-comment"># Bom dia, Maria!</span>
+
+<span class="code-keyword">URGENTE</span> <span class="code-var">(hoje)</span>:
+  <span class="code-string">Arte promoção</span> - 14h
+  <span class="code-string">Revisão copy</span> - 18h
+
+<span class="code-keyword">PRIORIDADE</span>:
+  <span class="code-string">Calendário</span> - qui
+  <span class="code-string">Relatório</span> - sex
+
+<span class="code-prop">status</span>: <span class="code-bool">5 tarefas | 78%</span>
+<span class="code-comment"># ✓ No prazo</span></code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Solution 7: Competitive Intelligence -->
+            <div class="solution-item animate-on-scroll">
+                <div class="solution-content">
+                    <h3><span class="number">07.</span> Inteligência Competitiva</h3>
+                    <p>Monitore concorrentes, descubra tendências e encontre oportunidades antes do mercado.</p>
+                    <ul class="solution-features">
+                        <li>Monitoramento de anúncios (Ad Library)</li>
+                        <li>Benchmark de redes sociais</li>
+                        <li>Alertas de tendências emergentes</li>
+                        <li>Análise de estratégias dos concorrentes</li>
+                        <li>Relatórios semanais automatizados</li>
+                    </ul>
+                </div>
+                <div class="solution-visual">
+                    <div class="code-window">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <span></span><span></span><span></span>
+                            </div>
+                            <span class="code-title">competitive-intel.json</span>
+                        </div>
+                        <div class="code-body">
+                            <pre><code>{
+  <span class="code-prop">"concorrente_a"</span>: {
+    <span class="code-prop">"anuncios"</span>: <span class="code-bool">23</span>,
+    <span class="code-prop">"novos"</span>: <span class="code-string">"+5 esta semana"</span>,
+    <span class="code-prop">"formato"</span>: <span class="code-string">"60% vídeo"</span>
+  },
+  <span class="code-prop">"concorrente_b"</span>: {
+    <span class="code-prop">"anuncios"</span>: <span class="code-bool">8</span>,
+    <span class="code-prop">"status"</span>: <span class="code-string">"pausado"</span>
+  },
+  <span class="code-keyword">"oportunidade"</span>: <span class="code-string">"⚡ INVESTIR AGORA"</span>
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Solution 8: Motion Videos -->
+            <div class="solution-item animate-on-scroll">
+                <div class="solution-content">
+                    <h3><span class="number">08.</span> Vídeos de Motion com IA</h3>
+                    <p>Vídeos de motion graphics gerados por inteligência artificial. Animações profissionais para stories, reels e anúncios — sem precisar de After Effects.</p>
+                    <ul class="solution-features">
+                        <li>Motion graphics prontos em minutos</li>
+                        <li>Animações de texto e logo</li>
+                        <li>Templates customizáveis por marca</li>
+                        <li>Formatos: Story, Reels, Feed, Anúncios</li>
+                        <li>Exporta em alta qualidade (1080p/4K)</li>
+                        <li>Sem After Effects, sem designer de motion</li>
+                    </ul>
+                </div>
+                <div class="solution-visual">
+                    <div class="code-window">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <span></span><span></span><span></span>
+                            </div>
+                            <span class="code-title">motion-generator.js</span>
+                        </div>
+                        <div class="code-body">
+                            <pre><code><span class="code-keyword">const</span> <span class="code-var">video</span> = <span class="code-keyword">await</span> Motion.<span class="code-func">create</span>({
+  <span class="code-prop">tipo</span>: <span class="code-string">"promo-story"</span>,
+  <span class="code-prop">texto</span>: <span class="code-string">"30% OFF"</span>,
+  <span class="code-prop">logo</span>: <span class="code-string">"./logo.png"</span>,
+  <span class="code-prop">cores</span>: [<span class="code-string">"#FF6B35"</span>, <span class="code-string">"#1A1A1A"</span>],
+  <span class="code-prop">duracao</span>: <span class="code-string">"15s"</span>,
+  <span class="code-prop">formato</span>: <span class="code-string">"9:16"</span>
+});
+
+<span class="code-comment">// ✓ Animações suaves</span>
+<span class="code-comment">// ✓ Transições profissionais</span>
+<span class="code-comment">// ✓ Pronto para publicar</span>
+
+<span class="code-func">video.export</span>(<span class="code-string">"1080p"</span>);</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROI -->
+    <section class="roi">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <h2>O retorno é garantido</h2>
+                <p>Veja quanto a Spark pode economizar por mês</p>
+            </div>
+            <div class="roi-content">
+                <table class="roi-table animate-on-scroll">
+                    <thead>
+                        <tr>
+                            <th>Atividade</th>
+                            <th>Tempo atual</th>
+                            <th>Com automação</th>
+                            <th>Economia</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Relatórios</td>
+                            <td>40h</td>
+                            <td>2h</td>
+                            <td class="highlight-cell">38h</td>
+                        </tr>
+                        <tr>
+                            <td>Monitoramento ads</td>
+                            <td>30h</td>
+                            <td>0h</td>
+                            <td class="highlight-cell">30h</td>
+                        </tr>
+                        <tr>
+                            <td>Criar copys</td>
+                            <td>20h</td>
+                            <td>5h</td>
+                            <td class="highlight-cell">15h</td>
+                        </tr>
+                        <tr>
+                            <td>Gestão projetos</td>
+                            <td>15h</td>
+                            <td>3h</td>
+                            <td class="highlight-cell">12h</td>
+                        </tr>
+                        <tr>
+                            <td>Briefings</td>
+                            <td>10h</td>
+                            <td>2h</td>
+                            <td class="highlight-cell">8h</td>
+                        </tr>
+                        <tr>
+                            <td><strong>TOTAL</strong></td>
+                            <td><strong>115h</strong></td>
+                            <td><strong>12h</strong></td>
+                            <td class="highlight-cell"><strong>103h</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="roi-result animate-on-scroll">
+                    <h3>103h</h3>
+                    <p>Economia mensal</p>
+                    <br>
+                    <p style="font-size: 14px; margin-top: 20px; position: relative;">
+                        Horas economizadas por mês<br>
+                        em tarefas operacionais<br>
+                        <span style="color: var(--orange);">= R$8.240 em valor de trabalho</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>Enzo Vaccaro © 2026 — Automação Inteligente com IA</p>
+        </div>
+    </footer>
+
+    <script>
+        // Header scroll effect
+        const header = document.querySelector('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Scroll animations with Intersection Observer
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Parallax effect for particles
+        document.addEventListener('mousemove', (e) => {
+            const particles = document.querySelectorAll('.particle');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            particles.forEach((particle, i) => {
+                const speed = (i + 1) * 0.5;
+                const xOffset = (x - 0.5) * speed * 20;
+                const yOffset = (y - 0.5) * speed * 20;
+                particle.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+            });
+        });
+
+        // ============ SPARKS CANVAS SYSTEM ============
+        const canvas = document.getElementById('sparksCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Resize canvas
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight * 3; // Cover full page
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Spark class
+        class Spark {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                // Random start position (edges or random)
+                const side = Math.floor(Math.random() * 4);
+                switch(side) {
+                    case 0: // Top
+                        this.x = Math.random() * canvas.width;
+                        this.y = -10;
+                        break;
+                    case 1: // Right
+                        this.x = canvas.width + 10;
+                        this.y = Math.random() * canvas.height;
+                        break;
+                    case 2: // Bottom
+                        this.x = Math.random() * canvas.width;
+                        this.y = canvas.height + 10;
+                        break;
+                    case 3: // Left
+                        this.x = -10;
+                        this.y = Math.random() * canvas.height;
+                        break;
+                }
+                
+                // Velocity towards center area with some randomness
+                const targetX = canvas.width * (0.3 + Math.random() * 0.4);
+                const targetY = canvas.height * (0.2 + Math.random() * 0.3);
+                const angle = Math.atan2(targetY - this.y, targetX - this.x);
+                const speed = 1 + Math.random() * 3;
+                
+                this.vx = Math.cos(angle) * speed + (Math.random() - 0.5) * 2;
+                this.vy = Math.sin(angle) * speed + (Math.random() - 0.5) * 2;
+                
+                this.size = 1 + Math.random() * 2;  // Smaller
+                this.life = 80 + Math.random() * 150;  // Shorter life
+                this.maxLife = this.life;
+                this.trail = [];
+                this.trailLength = 8 + Math.floor(Math.random() * 12);
+                
+                // Orange variations
+                const orangeVariants = [
+                    { r: 255, g: 107, b: 53 },   // Main orange
+                    { r: 255, g: 138, b: 91 },   // Light orange
+                    { r: 255, g: 165, b: 0 },    // Gold
+                    { r: 255, g: 200, b: 100 },  // Bright
+                    { r: 255, g: 80, b: 20 },    // Deep orange
+                ];
+                this.color = orangeVariants[Math.floor(Math.random() * orangeVariants.length)];
+            }
+
+            update() {
+                // Add current position to trail
+                this.trail.push({ x: this.x, y: this.y });
+                if (this.trail.length > this.trailLength) {
+                    this.trail.shift();
+                }
+
+                // Apply slight gravity and drift
+                this.vy += 0.02;
+                this.vx += (Math.random() - 0.5) * 0.1;
+                
+                this.x += this.vx;
+                this.y += this.vy;
+                this.life--;
+
+                // Fade and shrink
+                if (this.life < 30) {
+                    this.size *= 0.98;
+                }
+
+                return this.life > 0 && this.size > 0.5;
+            }
+
+            draw() {
+                const alpha = Math.min(0.5, this.life / 80);  // More subtle
+                
+                // Draw trail
+                if (this.trail.length > 1) {
+                    ctx.beginPath();
+                    ctx.moveTo(this.trail[0].x, this.trail[0].y);
+                    
+                    for (let i = 1; i < this.trail.length; i++) {
+                        ctx.lineTo(this.trail[i].x, this.trail[i].y);
+                    }
+                    
+                    const gradient = ctx.createLinearGradient(
+                        this.trail[0].x, this.trail[0].y,
+                        this.x, this.y
+                    );
+                    gradient.addColorStop(0, `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, 0)`);
+                    gradient.addColorStop(1, `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${alpha * 0.3})`);
+                    
+                    ctx.strokeStyle = gradient;
+                    ctx.lineWidth = this.size * 0.5;
+                    ctx.lineCap = 'round';
+                    ctx.stroke();
+                }
+
+                // Draw glow (subtle)
+                const glowGradient = ctx.createRadialGradient(
+                    this.x, this.y, 0,
+                    this.x, this.y, this.size * 3
+                );
+                glowGradient.addColorStop(0, `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${alpha * 0.4})`);
+                glowGradient.addColorStop(0.5, `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${alpha * 0.1})`);
+                glowGradient.addColorStop(1, `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, 0)`);
+                
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size * 3, 0, Math.PI * 2);
+                ctx.fillStyle = glowGradient;
+                ctx.fill();
+
+                // Draw core (subtle)
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${alpha * 0.7})`;
+                ctx.fill();
+            }
+        }
+
+        // Create sparks
+        const sparks = [];
+        const maxSparks = 20;  // Reduced quantity
+        
+        function spawnSpark() {
+            if (sparks.length < maxSparks) {
+                sparks.push(new Spark());
+            }
+        }
+
+        // Spawn sparks periodically (slower)
+        setInterval(spawnSpark, 400);
+
+        // Animation loop
+        function animateSparks() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Update and draw sparks
+            for (let i = sparks.length - 1; i >= 0; i--) {
+                if (!sparks[i].update()) {
+                    sparks[i].reset();
+                }
+                sparks[i].draw();
+            }
+            
+            requestAnimationFrame(animateSparks);
+        }
+        
+        animateSparks();
+
+        // Spawn burst of sparks on click
+        document.addEventListener('click', (e) => {
+            for (let i = 0; i < 8; i++) {
+                const spark = new Spark();
+                spark.x = e.clientX;
+                spark.y = e.clientY + window.scrollY;
+                spark.vx = (Math.random() - 0.5) * 8;
+                spark.vy = (Math.random() - 0.5) * 8 - 3;
+                spark.size = 3 + Math.random() * 3;
+                sparks.push(spark);
+            }
+        });
+    </script>
+</body>
+</html>
